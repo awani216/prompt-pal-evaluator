@@ -10,8 +10,28 @@ import { Switch } from "@/components/ui/switch";
 import { Eye, EyeOff, Key, CheckCircle, AlertCircle, Settings } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
+interface ProviderConfig {
+  enabled: boolean;
+  apiKey: string;
+  model: string;
+  showKey: boolean;
+  connected: boolean;
+}
+
+interface JudgeConfig {
+  provider: string;
+  model: string;
+  enabled: boolean;
+}
+
+interface ConfigState {
+  groq: ProviderConfig;
+  gemini: ProviderConfig;
+  judge: JudgeConfig;
+}
+
 const LLMConfiguration = () => {
-  const [configs, setConfigs] = useState({
+  const [configs, setConfigs] = useState<ConfigState>({
     groq: {
       enabled: false,
       apiKey: "",
@@ -35,8 +55,8 @@ const LLMConfiguration = () => {
   const { toast } = useToast();
 
   const testConnection = async (provider: string) => {
-    const config = configs[provider as keyof typeof configs];
-    if (!config.apiKey) {
+    const config = configs[provider as keyof ConfigState];
+    if ('apiKey' in config && !config.apiKey) {
       toast({
         title: "API Key Required",
         description: `Please enter your ${provider.toUpperCase()} API key first`,
@@ -49,7 +69,7 @@ const LLMConfiguration = () => {
     setTimeout(() => {
       setConfigs(prev => ({
         ...prev,
-        [provider]: { ...prev[provider as keyof typeof prev], connected: true }
+        [provider]: { ...prev[provider as keyof ConfigState], connected: true }
       }));
       toast({
         title: "Connection successful",
@@ -61,12 +81,15 @@ const LLMConfiguration = () => {
   const updateConfig = (provider: string, field: string, value: any) => {
     setConfigs(prev => ({
       ...prev,
-      [provider]: { ...prev[provider as keyof typeof prev], [field]: value }
+      [provider]: { ...prev[provider as keyof ConfigState], [field]: value }
     }));
   };
 
   const toggleKeyVisibility = (provider: string) => {
-    updateConfig(provider, 'showKey', !configs[provider as keyof typeof configs].showKey);
+    const config = configs[provider as keyof ConfigState];
+    if ('showKey' in config) {
+      updateConfig(provider, 'showKey', !config.showKey);
+    }
   };
 
   const providerCards = [
@@ -105,7 +128,7 @@ const LLMConfiguration = () => {
 
       <div className="grid gap-6">
         {providerCards.map((provider) => {
-          const config = configs[provider.key as keyof typeof configs];
+          const config = configs[provider.key as keyof ConfigState] as ProviderConfig;
           return (
             <Card key={provider.key} className={`border-l-4 ${
               provider.color === 'orange' ? 'border-l-orange-500' : 'border-l-blue-500'
