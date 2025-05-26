@@ -44,29 +44,29 @@ const Index = () => {
               <Target className="w-4 h-4" />
               Prompt Manager
             </TabsTrigger>
-            <TabsTrigger value="llm-config" className="flex items-center gap-2">
+            <TabsTrigger value="config" className="flex items-center gap-2">
               <Brain className="w-4 h-4" />
-              LLM Configuration
+              LLM Config
             </TabsTrigger>
             <TabsTrigger value="results" className="flex items-center gap-2">
               <BarChart3 className="w-4 h-4" />
-              Evaluation Results
+              Results
             </TabsTrigger>
           </TabsList>
 
           <TabsContent value="upload" className="space-y-6">
             <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
               <CardHeader>
-                <CardTitle className="flex items-center gap-3">
-                  <Upload className="w-6 h-6 text-blue-600" />
-                  Dataset Upload
+                <CardTitle className="flex items-center gap-2">
+                  <Upload className="w-5 h-5 text-blue-600" />
+                  Dataset Management
                 </CardTitle>
                 <CardDescription>
-                  Upload your CSV dataset for evaluation. The data will be used to generate prompts and run evaluations.
+                  Upload and validate your CSV evaluation datasets
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <DatasetUpload onDatasetChange={setDataset} />
+                <DatasetUpload dataset={dataset} setDataset={setDataset} />
               </CardContent>
             </Card>
           </TabsContent>
@@ -74,33 +74,33 @@ const Index = () => {
           <TabsContent value="prompts" className="space-y-6">
             <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
               <CardHeader>
-                <CardTitle className="flex items-center gap-3">
-                  <Target className="w-6 h-6 text-blue-600" />
-                  Prompt Management
+                <CardTitle className="flex items-center gap-2">
+                  <Target className="w-5 h-5 text-green-600" />
+                  Prompt Templates
                 </CardTitle>
                 <CardDescription>
-                  Create and manage evaluation prompts with template variables that map to your dataset columns.
+                  Create and manage evaluation prompts with template variables
                 </CardDescription>
               </CardHeader>
               <CardContent>
                 <PromptManager 
-                  dataset={dataset} 
-                  prompts={prompts}
-                  onPromptsChange={setPrompts}
+                  prompts={prompts} 
+                  setPrompts={setPrompts}
+                  dataset={dataset}
                 />
               </CardContent>
             </Card>
           </TabsContent>
 
-          <TabsContent value="llm-config" className="space-y-6">
+          <TabsContent value="config" className="space-y-6">
             <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
               <CardHeader>
-                <CardTitle className="flex items-center gap-3">
-                  <Brain className="w-6 h-6 text-blue-600" />
+                <CardTitle className="flex items-center gap-2">
+                  <Brain className="w-5 h-5 text-purple-600" />
                   LLM Configuration
                 </CardTitle>
                 <CardDescription>
-                  Configure your LLM providers and automated judgment settings for parallel evaluation.
+                  Configure Groq and Gemini API connections for parallel evaluation
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -112,16 +112,16 @@ const Index = () => {
           <TabsContent value="results" className="space-y-6">
             <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-lg">
               <CardHeader>
-                <CardTitle className="flex items-center gap-3">
-                  <BarChart3 className="w-6 h-6 text-blue-600" />
+                <CardTitle className="flex items-center gap-2">
+                  <BarChart3 className="w-5 h-5 text-orange-600" />
                   Evaluation Results
                 </CardTitle>
                 <CardDescription>
-                  View and analyze evaluation results with detailed metrics and comparative analysis.
+                  View and analyze LLM evaluation results with automated scoring
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <EvaluationResults />
+                <EvaluationResults dataset={dataset} prompts={prompts} />
               </CardContent>
             </Card>
           </TabsContent>
